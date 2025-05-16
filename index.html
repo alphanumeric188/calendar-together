@@ -2,41 +2,143 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Calendar Together</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9f9ff;
+      margin: 0;
+      padding: 0;
+      color: #333;
+    }
+    header {
+      background-color: #4f46e5;
+      color: white;
+      padding: 30px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      background-color: #3730a3;
+      padding: 10px;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    main {
+      max-width: 960px;
+      margin: auto;
+      padding: 20px;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    section h2 {
+      color: #4f46e5;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    footer {
+      text-align: center;
+      padding: 20px;
+      background-color: #e0e7ff;
+    }
+  </style>
 </head>
 <body>
   <header>
     <h1>📅 Calendar Together</h1>
-    <p>Smart scheduling for school activities and collaboration</p>
+    <p>A smart and collaborative scheduling platform for your school</p>
   </header>
+  
+  <nav>
+    <a href="#overview">Overview</a>
+    <a href="#features">Features</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#team">Our Team</a>
+    <a href="#contact">Contact</a>
+  </nav>
 
   <main>
-    <section>
-      <h2>Project Overview</h2>
-      <p>Calendar Together is a responsive scheduling platform that allows students, teachers, and staff to collaborate and create smart school timetables.</p>
+    <section id="overview">
+      <h2>Overview</h2>
+      <p>Calendar Together helps streamline planning across schools by allowing students, teachers, and administrators to build shared schedules with ease. With smart conflict detection and real-time collaboration, your schedule becomes smarter.</p>
     </section>
 
-    <section>
-      <h2>Try it out</h2>
-      <button onclick="showAlert()">Check Schedule</button>
+    <section id="features">
+      <h2>Features</h2>
+      <div class="features">
+        <div class="feature-card">
+          <h3>Smart Conflict Detection</h3>
+          <p>Automatically alerts you if there are overlapping events or double-booked times.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Collaborative Editing</h3>
+          <p>Multiple users can add or edit events together, with changes saved in real time.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Personalized Views</h3>
+          <p>Each user can customize their calendar view by category, priority, or role.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Notifications</h3>
+          <p>Receive email or in-app reminders before your scheduled activities.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Printable Schedules</h3>
+          <p>Download or print your schedule for offline use or distribution.</p>
+        </div>
+        <div class="feature-card">
+          <h3>Mobile Friendly</h3>
+          <p>Responsive design for perfect usability on smartphones and tablets.</p>
+        </div>
+      </div>
     </section>
 
-    <section>
-      <h2>Coming Soon</h2>
+    <section id="roadmap">
+      <h2>Project Roadmap</h2>
       <ul>
-        <li>🔔 Real-time reminders</li>
-        <li>🧑‍🤝‍🧑 Shared group calendars</li>
-        <li>📈 Smart schedule optimization</li>
+        <li><strong>Phase 1:</strong> Idea brainstorming and prototype design</li>
+        <li><strong>Phase 2:</strong> Core feature development and internal testing</li>
+        <li><strong>Phase 3:</strong> User testing with a small group of schools</li>
+        <li><strong>Phase 4:</strong> Public launch and continuous updates</li>
       </ul>
+    </section>
+
+    <section id="team">
+      <h2>Our Team</h2>
+      <p>We are a team of student developers and teachers working together to solve real scheduling problems in education. Meet our lead developers, designers, and testers!</p>
+    </section>
+
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <p>Want to collaborate or give feedback? Reach out at <strong>team@calendartogether.com</strong></p>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Calendar Together Team</p>
+    <p>&copy; 2025 Calendar Together Project. All rights reserved.</p>
   </footer>
-
-  <script src="script.js"></script>
 </body>
 </html>
