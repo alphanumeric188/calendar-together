@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Calendar Together - Calendar</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    #availability-form {
+      max-width: 600px;
+      margin: 20px auto;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    #friends-list {
+      max-width: 600px;
+      margin: 20px auto 40px;
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+    #friends-list label {
+      display: block;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📅 Calendar Together</h1>
+    <p>Check your calendar and set your availability</p>
+  </header>
+
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="calendar.html" style="font-weight:bold;">Calendar</a>
+    <a href="login.html">Login</a>
+  </nav>
+
+  <main>
+    <section id="calendar-embed" style="max-width: 960px; margin: auto;">
+      <h2>Shared Google Calendar</h2>
+      <iframe 
+        src="https://calendar.google.com/calendar/embed?src=your_calendar_id&ctz=Asia%2FJakarta" 
+        style="border: 0; width: 100%; height: 600px;" 
+        frameborder="0" 
+        scrolling="no">
+      </iframe>
+    </section>
+
+    <section id="availability-input">
+      <h2>Set Your Availability</h2>
+      <form id="availability-form">
+        <label>
+          Date:
+          <input type="date" id="avail-date" required />
+        </label>
+        <label>
+          Start Time:
+          <input type="time" id="avail-start" required />
+        </label>
+        <label>
+          End Time:
+          <input type="time" id="avail-end" required />
+        </label>
+        <button type="submit">Add Availability</button>
+      </form>
+
+      <h3>Your Available Times:</h3>
+      <ul id="availability-list"></ul>
+    </section>
+
+    <section id="friends-list">
+      <h2>Friends</h2>
+      <p>Select friends to check common available times:</p>
+      <label><input type="checkbox" name="friends" value="Alice" /> Alice</label>
+      <label><input type="checkbox" name="friends" value="Bob" /> Bob</label>
+      <label><input type="checkbox" name="friends" value="Charlie" /> Charlie</label>
+      <button id="find-common-times">Find Common Available Times</button>
+      <div id="common-times-result" style="margin-top:15px; font-weight:bold;"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Calendar Together Project. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Store availability in memory (for demo; no backend)
+    const availability = [];
+
+    const availForm = document.getElementById('availability-form');
+    const availList = document.getElementById('availability-list');
+    const commonTimesResult = document.getElementById('common-times-result');
+
+    availForm.addEventListener('submit', e => {
+      e.preventDefault();
+      const date = document.getElementById('avail-date').value;
+      const start = document.getElementById('avail-start').value;
+      const end = document.getElementById('avail-end').value;
+
+      if (start >= end) {
+        alert("End time must be after start time!");
+        return;
+      }
+
+      availability.push({ date, start, end });
+      renderAvailability();
+      availForm.reset();
+    });
+
+    function renderAvailability() {
+      availList.innerHTML = '';
+      availability.forEach((slot, i) => {
+        const li = document.createElement('li');
+        li.textContent = `${slot.date}: ${slot.start} - ${slot.end}`;
+        availList.appendChild(li);
+      });
+    }
+
+    // Mock friends' availability (expand with real data or backend later)
+    const friendsAvailability = {
+      Alice: [{ date: '2025-06-15', start: '10:00', end: '12:00' }],
+      Bob: [{ date: '2025-06-15', start: '11:00', end: '13:00' }],
+      Charlie: [{ date: '2025-06-15', start: '09:00', end: '10:30' }]
+    };
+
+    document.getElementById('find-common-times').addEventListener('click', () => {
+      const checkedFriends = Array.from(document.querySelectorAll('input[name="friends"]:checked'))
+                                  .map(cb => cb.value);
+      if (checkedFriends.length === 0) {
+        commonTimesResult.textContent = 'Please select at least one friend.';
+        return;
+      }
+
+      // Fixed date for demo purposes
+      const targetDate = '2025-06-15';
+
+      // User availability on targetDate
+      const userSlots = availability.filter(slot => slot.date === targetDate);
+      if (userSlots.length === 0) {
+        commonTimesResult.textContent = `You have no availability on ${targetDate}`;
+        return;
+      }
+
+      // Friends availability on targetDate
+      let friendsSlots = [];
+      checkedFriends.forEach(friend => {
+        if (friendsAvailability[friend]) {
+          friendsSlots = friendsSlots.concat(friendsAvailability[friend].filter(slot => slot.date === targetDate));
+        }
+      });
+
+      if (friendsSlots.length === 0) {
+        commonTimesResult.textContent = `Selected friends have no availability on ${targetDate}`;
+        return;
+      }
+
+      // Time helper functions
+      function timeToMinutes(t) {
+        const [h,m] = t.split(':').map(Number);
+        return h*60 + m;
+      }
+
+      function overlaps(aStart, aEnd, bStart, bEnd) {
+        return (aStart < bEnd) && (bStart < aEnd);
+      }
+
+      let commonIntervals = [];
+
+      userSlots.forEach(us => {
+        const usStart = timeToMinutes(us.start);
+        const usEnd = timeToMinutes(us.end);
+        friendsSlots.forEach(fs => {
+          const fsStart = timeToMinutes(fs.start);
+          const fsEnd = timeToMinutes(fs.end);
+
+          if (overlaps(usStart, usEnd, fsStart, fsEnd)) {
+            const start = Math.max(usStart, fsStart);
+            const end = Math.min(usEnd, fsEnd);
+            commonIntervals.push({start, end});
+          }
+        });
+      });
+
+      if (commonIntervals.length === 0) {
+        commonTimesResult.textContent = `No common available times found on ${targetDate}`;
+        return;
+      }
+
+      function minutesToTime(m) {
+        let hh = Math.floor(m / 60).toString().padStart(2,'0');
+        let mm = (m % 60).toString().padStart(2,'0');
+        return `${hh}:${mm}`;
+      }
+
+      let intervalsStr = commonIntervals.map(interval => `${minutesToTime(interval.start)} - ${minutesToTime(interval.end)}`).join(', ');
+
+      commonTimesResult.textContent = `Common available times on ${targetDate}: ${intervalsStr}`;
+    });
+  </script>
+</body>
+</html>
